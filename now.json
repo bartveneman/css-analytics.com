@@ -1,0 +1,13 @@
+{
+	"name": "css-analytics",
+	"version": 2,
+	"public": false,
+	"alias": ["css-analytics.com", "www.css-analytics.com"],
+	"routes": [
+		{
+			"src": ".*",
+			"status": 302,
+			"headers": { "Location": "https://www.projectwallace.com?ref=css-analytics.com" }
+		}
+	]
+}
