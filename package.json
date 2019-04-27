@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node dev.js"
+    "dev": "micro-dev"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,11 @@
   "homepage": "https://github.com/bartveneman/css-analytics.com#readme",
   "dependencies": {
     "@projectwallace/css-analyzer": "^2.3.0",
-    "body-parser": "^1.19.0",
-    "express": "^4.16.4",
     "got": "^9.6.0",
+    "micro": "^9.3.3",
     "pug": "^2.0.3"
+  },
+  "devDependencies": {
+    "micro-dev": "^3.0.0"
   }
 }

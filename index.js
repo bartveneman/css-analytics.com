@@ -1,26 +1,26 @@
-const express = require("express");
-const path = require("path");
-const got = require("got");
+const { text } = require("micro");
 const analyzeCss = require("@projectwallace/css-analyzer");
-const { urlencoded } = require("body-parser");
+const url = require("url");
+const got = require("got");
+const pug = require("pug");
+const indexTemplate = pug.compileFile("views/index.pug")();
+const statsTemplate = pug.compileFile("views/stats.pug");
 
-const app = express();
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "pug");
-
-app.get("/", async (req, res) => {
-  if (req.query.url) {
-    const response = await got(`https://extract-css.now.sh/${req.query.url}`);
-    const stats = await analyzeCss(response.body);
-    return res.render("stats", { stats });
+module.exports = async req => {
+  if (req.method === "POST") {
+    const body = await text(req, { limit: "4mb" });
+    const css = decodeURIComponent(body).substring(4);
+    const stats = await analyzeCss(css);
+    return statsTemplate({ stats });
   }
-  return res.render("index");
-});
 
-app.post("/", urlencoded({ extended: true }), async (req, res) => {
-  const { css } = req.body;
-  const stats = await analyzeCss(css);
-  return res.render("stats", { stats });
-});
+  const { query } = url.parse(req.url, true);
 
-module.exports = app;
+  if (query.url) {
+    const { body } = await got(`https://extract-css.now.sh/${query.url}`);
+    const stats = await analyzeCss(body);
+    return statsTemplate({ stats });
+  }
+
+  return indexTemplate;
+};
