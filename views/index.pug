@@ -1,0 +1,20 @@
+extends layout
+
+block content
+	header
+		h1 css-analytics.com
+		p
+			| by
+			|
+			a(href='https://www.projectwallace.com') Project Wallace
+
+	main
+		form(action='/' method='POST')
+			label(for='css') Analyze direct input
+			textarea(id='css' name='css' placeholder='html {\n\tcolor: #bada55;\n}' autofocus)
+			button Analyze CSS
+
+		form(action='/' method='GET')
+			label(for='url') Analyze URI
+			input(type='url' id='url' name='url' placeholder='https://www.projectwallace.com')
+			button Analyze CSS
