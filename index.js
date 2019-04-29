@@ -11,8 +11,9 @@ app.set("view engine", "pug");
 app.get("/", async (req, res) => {
   if (req.query.url) {
     const response = await got(`https://extract-css.now.sh/${req.query.url}`);
-    const stats = await analyzeCss(response.body);
-    return res.render("stats", { stats });
+    const css = response.body;
+    const stats = await analyzeCss(css);
+    return res.render("stats", { stats, css, url: req.query.url });
   }
   return res.render("index");
 });
@@ -20,7 +21,7 @@ app.get("/", async (req, res) => {
 app.post("/", urlencoded({ extended: true }), async (req, res) => {
   const { css } = req.body;
   const stats = await analyzeCss(css);
-  return res.render("stats", { stats });
+  return res.render("stats", { stats, css });
 });
 
 module.exports = app;

@@ -1,5 +1,235 @@
 extends layout
 
 block content
+	header
+		h1 css-analytics.com
+		p
+			| by
+			|
+			a(href='https://www.projectwallace.com') Project Wallace
+
 	a(href='/') Back to home
-	pre= JSON.stringify(stats, null, 2)
+
+	if url
+		p= url
+
+	section
+		h2 Summary
+		ul
+			li
+				h3 Filesize
+				dl
+					dt Raw bytes
+					dd= stats['stylesheets.size']
+			li
+				h3 Rules
+				dl
+					dt Total
+					dd= stats['rules.total']
+			li
+				h3 Selectors
+				dl
+					dt Total
+					dd= stats['selectors.total']
+			li
+				h3 Declarations
+				dl
+					dt Total
+					dd= stats['declarations.total']
+
+	section
+		h2 Complexity
+		ul
+			li
+				h3 Rules
+				dl
+					dt Total
+					dd= stats['rules.total']
+			li
+				h3 Selectors
+				dl
+					dt Total
+					dd= stats['selectors.total']
+					dt Average selectors per rule
+					dd= stats['rules.selectors.average']
+					dt Maximum selectors per rule
+					dd= stats['rules.selectors.max']
+					dt Minimum selectors per rule
+					dd= stats['rules.selectors.min']
+			li
+				h3 Selector identifiers
+				dl
+					dt Average per selector
+					dd= stats['selectors.identifiers.average']
+					dt Maximum per selector
+					dd
+						details
+							summary= stats['selectors.identifiers.max.count']
+							code= stats['selectors.identifiers.max.value']
+			li
+				h3 Declarations
+				dl
+					dt Total
+					dd= stats['declarations.total']
+					//- dt Average declarations per rule
+					//- dd= stats['rules.declarations.average']
+					//- dt Maximum declarations per rule
+					//- dd= stats['rules.declarations.max']
+					//- dt Minimum declarations per rule
+					//- dd= stats['rules.declarations.min']
+					dt Unique
+					dd= stats['declarations.totalUnique']
+			li
+				h3 At-Rules
+				dl
+					dt Total @media queries
+					dd= stats['atrules.mediaqueries.total']
+					dt Total @supports
+					dd= stats['atrules.supports.total']
+			li
+				h3 Browserhacks
+				dl
+					dt Total
+					dd= stats['stylesheets.browserhacks.total']
+					dt @media
+					dd= stats['atrules.mediaqueries.browserhacks.total']
+					dt @supports
+					dd= stats['atrules.supports.browserhacks.total']
+					dt Selector
+					dd= stats['selectors.browserhacks.total']
+					dt Properties
+					dd= stats['properties.browserhacks.total']
+					dt Values
+					dd= stats['values.browserhacks.total']
+
+	section
+		h2 Performance
+		ul
+			li
+				h3 Filesize
+				dl
+					dt Raw bytes
+					dd= stats['stylesheets.size']
+			li
+				h3 Rules
+				dl
+					dt Empty
+					dd 0
+			li
+				h3 @import rules
+				dl
+					dt Total
+					dd= stats['atrules.imports.total']
+					dt Unique
+					dd
+						details(open)
+							summary= stats['atrules.imports.totalUnique']
+							ol
+								for importRule in stats['atrules.imports.unique']
+									li
+										code= importRule
+			li
+				h3 @font-face rules
+				dl
+					dt Total
+					dd= stats['atrules.fontfaces.total']
+					dt Unique
+					dd
+						details(open)
+							summary= stats['atrules.fontfaces.totalUnique']
+							dl
+								for fontFace in stats['atrules.fontfaces.unique']
+									dt
+										code= JSON.stringify(fontFace.value, null, 2)
+									dd= fontFace.count
+
+	section
+		h2 Branding
+		ul
+			li
+				h3 Colors
+				dl
+					dt Total
+					dd= stats['values.colors.total']
+					dt Unique
+					dd
+						details(open)
+							summary= stats['values.colors.totalUnique']
+							- const totalCount = stats['values.colors.unique'].reduce((acc, curr) => (acc + curr.count), 0)
+							- const height = 80
+							svg(width=totalCount height=height viewbox=`0 0 ${totalCount} ${height}`)
+								- let offset = 0
+								for color in stats['values.colors.unique']
+									- offset = offset + color.count
+									rect(x=offset y=0 width=color.count height=height fill=color.value)
+							dl
+								for color in stats['values.colors.unique']
+									dt
+										code= color.value
+									dd #{color.count} &times;
+									dd
+										svg(width=16 height=16 viewbox='0 0 16 16')
+											rect(width=16 height=16 x=0 y=0 fill=color.value)
+			li
+				h3 Font-families
+				dl
+					dt Total
+					dd= stats['values.fontfamilies.total']
+					dt Unique
+					dd
+						details(open)
+							summary= stats['values.fontfamilies.totalUnique']
+							dl
+								for ff in stats['values.fontfamilies.unique']
+									dt
+										code= ff.value
+									dd #{ff.count} &times;
+			li
+				h3 Font-sizes
+				dl
+					dt Total
+					dd= stats['values.fontsizes.total']
+					dt Unique
+					dd
+						details(open)
+							summary= stats['values.fontsizes.totalUnique']
+							dl
+								for fontsize in stats['values.fontsizes.unique']
+									dt
+										code= fontsize.value
+									dd #{fontsize.count} &times;
+			li
+				h3 Box-shadows
+				dl
+					dt Total
+					dd= stats['values.boxshadows.total']
+					dt Unique
+					dd
+						details(open)
+							summary= stats['values.boxshadows.totalUnique']
+							dl
+								for boxShadow in stats['values.boxshadows.unique']
+									dt
+										code= boxShadow.value
+									dd #{boxShadow.count} &times;
+			li
+				h3 @keyframes
+				dl
+					dt Total
+					dd= stats['atrules.keyframes.total']
+					dt Unique
+					dd
+						details(open)
+							summary= stats['atrules.keyframes.totalUnique']
+							dl
+								for keyframes in stats['atrules.keyframes.unique']
+									dt
+										code= keyframes.value
+									dd #{keyframes.count} &times;
+
+	//- pre= JSON.stringify(stats, null, 2)
+
+	h2 CSS
+	style
+		| .raw-css { white-space: pre-wrap; overflow: hidden}
+	pre.raw-css= css
