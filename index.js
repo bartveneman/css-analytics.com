@@ -6,7 +6,7 @@ const pug = require("pug");
 const path = require("path");
 
 const pugOptions = {
-  basedir: path.join(__dirname, "./views"),
+  basedir: path.join(__dirname, "views"),
   debug: true,
   compileDebug: true
 };
