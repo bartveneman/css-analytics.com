@@ -3,8 +3,16 @@ const analyzeCss = require("@projectwallace/css-analyzer");
 const url = require("url");
 const got = require("got");
 const pug = require("pug");
-const indexTemplate = pug.compileFile("views/index.pug")();
-const statsTemplate = pug.compileFile("views/stats.pug");
+const path = require("path");
+
+const pugOptions = {
+  basedir: path.join(__dirname, "./views"),
+  debug: true,
+  compileDebug: true
+};
+
+const indexTemplate = pug.compileFile("index.pug", pugOptions)();
+const statsTemplate = pug.compileFile("stats.pug", pugOptions);
 
 module.exports = async req => {
   if (req.method === "POST") {
