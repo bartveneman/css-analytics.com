@@ -21,7 +21,7 @@ app.get("/", async (req, res) => {
 app.post("/", urlencoded({ extended: true }), async (req, res) => {
   const { css } = req.body;
   const stats = await analyzeCss(css);
-  return res.render("stats", { stats, css });
+  return res.render("stats", { stats, css, url: undefined });
 });
 
 module.exports = app;
