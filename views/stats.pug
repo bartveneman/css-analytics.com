@@ -1,7 +1,10 @@
 extends layout
 
-block css
-	link(rel='stylesheet' href='https://codepen.io/bartveneman/pen/YMmxde.css')
+block title
+	if url
+		=url
+	else
+		| Analyzing raw CSS
 
 block content
 	header
@@ -11,10 +14,8 @@ block content
 			|
 			a(href='https://www.projectwallace.com') Project Wallace
 
-	a(href='/') Back to home
-
-	if url
-		p= url
+	p(style='text-align: center')
+		a(href='/') Back to home
 
 	section
 		h2 Summary
@@ -23,23 +24,27 @@ block content
 				li
 					h3 Filesize
 					dl
-						dt Raw bytes
-						dd= stats['stylesheets.size']
+						.stat
+							dt Raw bytes
+							dd= formatFilesize(stats['stylesheets.size'])
 				li
 					h3 Rules
 					dl
-						dt Total
-						dd= stats['rules.total']
+						.stat
+							dt Total
+							dd= formatNumber(stats['rules.total'])
 				li
 					h3 Selectors
 					dl
-						dt Total
-						dd= stats['selectors.total']
+						.stat
+							dt Total
+							dd= formatNumber(stats['selectors.total'])
 				li
 					h3 Declarations
 					dl
-						dt Total
-						dd= stats['declarations.total']
+						.stat
+							dt Total
+							dd= formatNumber(stats['declarations.total'])
 
 	section
 		h2 Complexity
@@ -48,64 +53,154 @@ block content
 				li
 					h3 Rules
 					dl
-						dt Total
-						dd= stats['rules.total']
+						.stat
+							dt Total
+							dd= formatNumber(stats['rules.total'])
 				li
 					h3 Selectors
 					dl
-						dt Total
-						dd= stats['selectors.total']
-						dt Average selectors per rule
-						dd= stats['rules.selectors.average']
-						dt Maximum selectors per rule
-						dd= stats['rules.selectors.max']
-						dt Minimum selectors per rule
-						dd= stats['rules.selectors.min']
+						.stat
+							dt Total
+							dd= formatNumber(stats['selectors.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['selectors.totalUnique'])
+				li
+					h3 Selectors per rule
+					dl
+						.stat
+							dt Average
+							dd= formatNumber(stats['rules.selectors.average'])
+						.stat
+							dt Maximum
+							dd= formatNumber(stats['rules.selectors.max'])
+						.stat
+							dt Minimum
+							dd= formatNumber(stats['rules.selectors.min'])
 				li
 					h3 Selector identifiers
 					dl
-						dt Average per selector
-						dd= stats['selectors.identifiers.average']
-						dt Maximum per selector
-						dd
-							details
-								summary= stats['selectors.identifiers.max.count']
-								code= stats['selectors.identifiers.max.value']
+						.stat
+							dt Average per selector
+							dd= formatNumber(stats['selectors.identifiers.average'])
+						.stat
+							dt Maximum per selector
+							dd= formatNumber(stats['selectors.identifiers.max.count'])
+				li
+					h3 Selector types
+					dl
+						.stat
+							dt ID selectors
+							dd= formatNumber(stats['selectors.id.total'])
+						.stat
+							dt JS selectors
+							dd= formatNumber(stats['selectors.js.total'])
+						.stat
+							dt Universal selectors
+							dd= formatNumber(stats['selectors.universal.total'])
+						.stat
+							dt Accessibility selectors
+							dd= formatNumber(stats['selectors.accessibility.total'])
 				li
 					h3 Declarations
 					dl
-						dt Total
-						dd= stats['declarations.total']
+						.stat
+							dt Total
+							dd= formatNumber(stats['declarations.total'])
+						//- .stat
 						//- dt Average declarations per rule
 						//- dd= stats['rules.declarations.average']
+						//- .stat
 						//- dt Maximum declarations per rule
 						//- dd= stats['rules.declarations.max']
+						//- .stat
 						//- dt Minimum declarations per rule
 						//- dd= stats['rules.declarations.min']
-						dt Unique
-						dd= stats['declarations.totalUnique']
+						.stat
+							dt Unique
+							dd= formatNumber(stats['declarations.totalUnique'])
 				li
 					h3 At-Rules
 					dl
-						dt Total @media queries
-						dd= stats['atrules.mediaqueries.total']
-						dt Total @supports
-						dd= stats['atrules.supports.total']
+						.stat
+							dt Total @media queries
+							dd= formatNumber(stats['atrules.mediaqueries.total'])
+						.stat
+							dt Total @supports
+							dd= formatNumber(stats['atrules.supports.total'])
 				li
 					h3 Browserhacks
 					dl
-						dt Total
-						dd= stats['stylesheets.browserhacks.total']
-						dt @media
-						dd= stats['atrules.mediaqueries.browserhacks.total']
-						dt @supports
-						dd= stats['atrules.supports.browserhacks.total']
-						dt Selector
-						dd= stats['selectors.browserhacks.total']
-						dt Properties
-						dd= stats['properties.browserhacks.total']
-						dt Values
-						dd= stats['values.browserhacks.total']
+						.stat
+							dt Total
+							dd= formatNumber(stats['stylesheets.browserhacks.total'])
+						.stat
+							dt @media
+							dd= formatNumber(stats['atrules.mediaqueries.browserhacks.total'])
+						.stat
+							dt @supports
+							dd= formatNumber(stats['atrules.supports.browserhacks.total'])
+						.stat
+							dt Selector
+							dd= formatNumber(stats['selectors.browserhacks.total'])
+						.stat
+							dt Properties
+							dd= formatNumber(stats['properties.browserhacks.total'])
+						.stat
+							dt Values
+							dd= formatNumber(stats['values.browserhacks.total'])
+
+			ul.sheets
+				li
+					h3 Top specificity selectors
+					dl.selectors
+						for selector in stats['selectors.specificity.top']
+							.selector
+								dt.value.is-selector
+									code= selector.value
+				li
+					h3 Top identifiers selectors
+					dl.selectors
+						for selector in stats['selectors.identifiers.top']
+							.selector
+								dt.value.is-selector
+									code= selector.value
+				if stats['selectors.id.total'] > 0
+					li
+						h3 ID selectors
+						dl.selectors
+							for selector in stats['selectors.id.unique']
+								.selector
+									dt.value.is-selector
+										code= selector.value
+									dd.count #{selector.count} &times;
+				if stats['selectors.js.total'] > 0
+					li
+						h3 JS selectors
+						dl.selectors
+							for selector in stats['selectors.js.unique']
+								.selector
+									dt.value.is-selector
+										code= selector.value
+									dd.count #{selector.count} &times;
+				if stats['selectors.universal.total'] > 0
+					li
+						h3 Universal selectors
+						dl.selectors
+							for selector in stats['selectors.universal.unique']
+								.selector
+									dt.value.is-selector
+										code= selector.value
+									dd.count #{selector.count} &times;
+				if stats['selectors.accessibility.total'] > 0
+					li
+						h3 Accessibility selectors
+						dl.selectors
+							for selector in stats['selectors.accessibility.unique']
+								.selector
+									dt.value.is-selector
+										code= selector.value
+									dd.count #{selector.count} &times;
 
 	section
 		h2 Performance
@@ -114,40 +209,53 @@ block content
 				li
 					h3 Filesize
 					dl
-						dt Raw bytes
-						dd= stats['stylesheets.size']
+						.stat
+							dt Raw bytes
+							dd= formatFilesize(stats['stylesheets.size'])
 				li
 					h3 Rules
 					dl
-						dt Empty
-						dd 0
+						.stat
+							dt Empty
+							dd= formatNumber(stats['rules.empty.total'])
 				li
 					h3 @import rules
 					dl
-						dt Total
-						dd= stats['atrules.imports.total']
-						dt Unique
-						dd
-							details
-								summary= stats['atrules.imports.totalUnique']
-								ol
-									for importRule in stats['atrules.imports.unique']
-										li
-											code= importRule
+						.stat
+							dt Total
+							dd= formatNumber(stats['atrules.imports.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['atrules.imports.totalUnique'])
 				li
 					h3 @font-face rules
 					dl
-						dt Total
-						dd= stats['atrules.fontfaces.total']
-						dt Unique
-						dd
-							details
-								summary= stats['atrules.fontfaces.totalUnique']
-								dl
-									for fontFace in stats['atrules.fontfaces.unique']
-										dt
-											code= JSON.stringify(fontFace.value, null, 2)
-										dd= fontFace.count
+						.stat
+							dt Total
+							dd= formatNumber(stats['atrules.fontfaces.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['atrules.fontfaces.totalUnique'])
+
+			ul.sheets
+				if stats['atrules.imports.total'] > 0
+					li
+						h3 @import rules
+						dl.selectors
+							for url in stats['atrules.imports.unique']
+								.selector
+									dt.value.is-selector
+										code= url.value
+									dd.count #{url.count} &times;
+				if stats['atrules.fontfaces.total'] > 0
+					li
+						h3 @font-face rules
+						dl.selectors
+							for fontface in stats['atrules.fontfaces.unique']
+								.selector
+									dt.value.is-selector
+										pre(style='overflow-x: hidden; white-space: pre-wrap; word-break: break-all; max-height: 300px; -webkit-overflow-scrolling: touch;')= JSON.stringify(fontface.value, null, 2)
+									dd.count #{fontface.count}&times;
 
 	section
 		h2 Branding
@@ -156,38 +264,48 @@ block content
 				li
 					h3 Colors
 					dl
-						dt Total
-						dd= stats['values.colors.total']
-						dt Unique
-						dd= stats['values.colors.totalUnique']
+						.stat
+							dt Total
+							dd= formatNumber(stats['values.colors.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['values.colors.totalUnique'])
 				li
 					h3 Font-families
 					dl
-						dt Total
-						dd= stats['values.fontfamilies.total']
-						dt Unique
-						dd= stats['values.fontfamilies.totalUnique']
+						.stat
+							dt Total
+							dd= formatNumber(stats['values.fontfamilies.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['values.fontfamilies.totalUnique'])
 				li
 					h3 Font-sizes
 					dl
-						dt Total
-						dd= stats['values.fontsizes.total']
-						dt Unique
-						dd= stats['values.fontsizes.totalUnique']
+						.stat
+							dt Total
+							dd= formatNumber(stats['values.fontsizes.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['values.fontsizes.totalUnique'])
 				li
 					h3 Box-shadows
 					dl
-						dt Total
-						dd= stats['values.boxshadows.total']
-						dt Unique
-						dd= stats['values.boxshadows.totalUnique']
+						.stat
+							dt Total
+							dd= formatNumber(stats['values.boxshadows.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['values.boxshadows.totalUnique'])
 				li
 					h3 @keyframes
 					dl
-						dt Total
-						dd= stats['atrules.keyframes.total']
-						dt Unique
-						dd= stats['atrules.keyframes.totalUnique']
+						.stat
+							dt Total
+							dd= formatNumber(stats['atrules.keyframes.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['atrules.keyframes.totalUnique'])
 
 			ul.sheets
 				li
@@ -231,5 +349,5 @@ block content
 
 	h2 CSS
 	style
-		| .raw-css { white-space: pre-wrap; overflow: hidden}
+		| .raw-css { white-space: pre-wrap; overflow-x: hidden; max-height: 300px; -webkit-overflow-scrolling: touch;}
 	pre.raw-css= css

@@ -3,10 +3,20 @@ const path = require("path");
 const got = require("got");
 const analyzeCss = require("@projectwallace/css-analyzer");
 const { urlencoded } = require("body-parser");
+const formatFilesize = require("pretty-bytes");
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
+
+app.use((req, res, next) => {
+  res.locals.formatFilesize = formatFilesize;
+  res.locals.formatNumber = number =>
+    Number.isInteger(number)
+      ? new Intl.NumberFormat().format(number)
+      : parseFloat(number).toFixed(3);
+  next();
+});
 
 app.get("/", async (req, res) => {
   if (req.query.url) {
