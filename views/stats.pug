@@ -1,11 +1,5 @@
 extends layout
 
-block title
-	if url
-		=url
-	else
-		| Analyzing raw CSS
-
 block content
 	header
 		h1 css-analytics.com
@@ -173,7 +167,7 @@ block content
 								.selector
 									dt.value.is-selector
 										code= selector.value
-									dd.count #{selector.count} &times;
+									dd.count #{selector.count}&times;
 				if stats['selectors.js.total'] > 0
 					li
 						h3 JS selectors
@@ -182,7 +176,7 @@ block content
 								.selector
 									dt.value.is-selector
 										code= selector.value
-									dd.count #{selector.count} &times;
+									dd.count #{selector.count}&times;
 				if stats['selectors.universal.total'] > 0
 					li
 						h3 Universal selectors
@@ -191,7 +185,7 @@ block content
 								.selector
 									dt.value.is-selector
 										code= selector.value
-									dd.count #{selector.count} &times;
+									dd.count #{selector.count}&times;
 				if stats['selectors.accessibility.total'] > 0
 					li
 						h3 Accessibility selectors
@@ -200,7 +194,17 @@ block content
 								.selector
 									dt.value.is-selector
 										code= selector.value
-									dd.count #{selector.count} &times;
+									dd.count #{selector.count}&times;
+				if stats['atrules.mediaqueries.total'] > 0
+					li
+						h3 Media queries
+						dl.selectors
+							for mq in stats['atrules.mediaqueries.unique']
+								.selector
+									dt.value.is-selector
+										code= mq.value
+									dd.count #{mq.count}&times;
+
 
 	section
 		h2 Performance
@@ -322,7 +326,7 @@ block content
 							.css-value.color-value
 								dt.value
 									code= color.value
-								dd.count #{color.count} &times;
+								dd.count #{color.count}&times;
 								dd.specimen
 									svg(width=16 height=16 viewbox='0 0 16 16')
 										rect(width=16 height=16 x=0 y=0 fill=color.value)
@@ -333,7 +337,7 @@ block content
 							.css-value
 								dt.value
 									code= ff.value
-								dd.count #{ff.count} &times;
+								dd.count #{ff.count}&times;
 								dd.specimen(style=`font-family: ${ff.value}; font-size: 2em;`) The quick brown fox jumps over the lazy dog
 				li
 					h3 Font-sizes
@@ -342,7 +346,7 @@ block content
 							.css-value
 								dt.value
 									code= fontsize.value
-								dd.count #{fontsize.count} &times;
+								dd.count #{fontsize.count}&times;
 								dd.specimen(style=`font-size: ${fontsize.value}`) The quick brown fox jumps over the lazy dog
 
 	//- pre= JSON.stringify(stats, null, 2)

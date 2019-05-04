@@ -1,5 +1,8 @@
 extends layout
 
+block title
+	| CSS Analytics for designers and developers
+
 block content
 	header
 		h1 css-analytics.com
@@ -16,5 +19,5 @@ block content
 
 		form(action='/' method='GET')
 			label(for='url') Analyze URI
-			input(type='url' id='url' name='url' placeholder='https://www.projectwallace.com')
+			input(type='text' id='url' name='url' placeholder='https://www.projectwallace.com')
 			button Analyze CSS
