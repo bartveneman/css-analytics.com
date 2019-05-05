@@ -1,8 +1,5 @@
 extends layout
 
-block title
-	| CSS Analytics for designers and developers
-
 block content
 	header
 		h1 css-analytics.com
@@ -14,7 +11,7 @@ block content
 	main
 		form(action='/' method='POST')
 			label(for='css') Analyze direct input
-			textarea(id='css' name='css' placeholder='html {\n\tcolor: #bada55;\n}' autofocus)
+			textarea(id='css' name='css' placeholder='html {\n\tcolor: #bada55;\n}')
 			button Analyze CSS
 
 		form(action='/' method='GET')
