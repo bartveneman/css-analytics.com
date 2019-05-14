@@ -19,7 +19,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", async (req, res) => {
+app.get("*", async (req, res) => {
   const url = req.query.url
     ? normalizeUrl(req.query.url, { stripWWW: false })
     : undefined;
@@ -30,13 +30,18 @@ app.get("/", async (req, res) => {
     const stats = await analyzeCss(css);
     return res.render("stats", { stats, css, url });
   }
+
   return res.render("index");
 });
 
-app.post("/", urlencoded({ extended: true }), async (req, res) => {
-  const { css } = req.body;
-  const stats = await analyzeCss(css);
-  return res.render("stats", { stats, css, url: undefined });
-});
+app.post(
+  "*",
+  urlencoded({ extended: true, limit: "5mb" }),
+  async (req, res) => {
+    const { css } = req.body;
+    const stats = await analyzeCss(css);
+    return res.render("stats", { stats, css, url: undefined });
+  }
+);
 
 module.exports = app;

@@ -349,9 +349,8 @@ block content
 								dd.count #{fontsize.count}&times;
 								dd.specimen(style=`font-size: ${fontsize.value}`) The quick brown fox jumps over the lazy dog
 
-	//- pre= JSON.stringify(stats, null, 2)
-
-	h2 CSS
-	style
-		| .raw-css { white-space: pre-wrap; overflow-x: hidden; max-height: 300px; -webkit-overflow-scrolling: touch;}
-	pre.raw-css= css
+	section
+		h2 CSS
+		style
+			| .raw-css { white-space: pre-wrap; overflow-x: hidden; max-height: 300px; -webkit-overflow-scrolling: touch; grid-column: 1/-1;}
+		pre.raw-css(style='grid-column: 1/-1;')= css
