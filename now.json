@@ -3,6 +3,7 @@
   "version": 2,
   "public": false,
   "alias": ["css-analytics.com", "www.css-analytics.com"],
+  "regions": ["all"],
   "builds": [
     {
       "src": "**/*.js",
