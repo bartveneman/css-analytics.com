@@ -1,6 +1,8 @@
 extends layout
 
 block content
+	link(rel='stylesheet' href='https://codepen.io/bartveneman/pen/YMmxde.css')
+
 	header
 		h1 css-analytics.com
 		p
@@ -20,7 +22,11 @@ block content
 					dl
 						.stat
 							dt Raw bytes
-							dd= formatFilesize(stats['stylesheets.size'])
+							dd= formatFileSize(stats['stylesheets.filesize.uncompressed.totalBytes'])
+							dt Compressed (gzip)
+							dd= formatFileSize(stats['stylesheets.filesize.compressed.gzip.totalBytes'])
+							dt Compressed (brotli)
+							dd= formatFileSize(stats['stylesheets.filesize.compressed.brotli.totalBytes'])
 				li
 					h3 Rules
 					dl
@@ -146,6 +152,13 @@ block content
 
 			ul.sheets
 				li
+					h3 Maximum selectors in 1 rule: #{formatNumber(stats['rules.selectors.max'])}
+					dl.selectors
+						for selector in stats['rules.selectors.maximum.value']
+							.selector
+								dt.value.is-selector
+									code= selector
+				li
 					h3 Top specificity selectors
 					dl.selectors
 						for selector in stats['selectors.specificity.top']
@@ -215,7 +228,7 @@ block content
 					dl
 						.stat
 							dt Raw bytes
-							dd= formatFilesize(stats['stylesheets.size'])
+							dd= formatFileSize(stats['stylesheets.size'])
 				li
 					h3 Rules
 					dl
@@ -314,13 +327,20 @@ block content
 			ul.sheets
 				li
 					h3 Colors
-					//- - const totalCount = stats['values.colors.unique'].reduce((acc, curr) => (acc + curr.count), 0)
-					//- - const height = 80
-					//- svg(width=totalCount height=height viewbox=`0 0 ${totalCount} ${height}`)
-					//- 	- let offset = 0
-					//- 	for color in stats['values.colors.unique']
-					//- 		- offset = offset + color.count
-					//- 		rect(x=offset y=0 width=color.count height=height fill=color.value)
+					- const unique = stats['values.colors.unique']
+					- const colorBarWidth = 1000
+					- const colorBarHeight = 160
+					- let colorBarOffset = 0
+					- const colorBarTotalCount = unique.reduce((total, color) => (total += color.count), 0)
+
+					svg.colorbar(viewbox=`0 0 ${colorBarWidth} ${colorBarHeight}` width=colorBarWidth height=colorBarHeight preserveAspectRatio='none')
+						rect(width=colorBarWidth height=(colorBarHeight / 2) fill='#fff' x=0 y=0)
+						rect(width=colorBarWidth height=(colorBarHeight / 2) fill='#000' x=0 y=(colorBarHeight / 2))
+						for color in unique
+							- const width = color.count / colorBarTotalCount * colorBarWidth
+							rect(x=colorBarOffset y=0 height=colorBarHeight width=width fill=formatSvgColor(color.value))
+							- colorBarOffset += width
+
 					dl.color-values
 						for color in stats['values.colors.unique']
 							.css-value.color-value
@@ -328,9 +348,10 @@ block content
 									code= color.value
 								dd.count #{color.count}&times;
 								dd.specimen
-									// @TODO: add semi-transparent block
 									svg(width=16 height=16 viewbox='0 0 16 16')
-										rect(width=16 height=16 x=0 y=0 fill=color.value)
+										path(d="M 0,0 16,16 0,16 z" fill="#000000")
+										path(d="M 0,0 16,0 16,16 z" fill="#ffffff")
+										rect(width=16 height=16 x=0 y=0 fill=formatSvgColor(color.value))
 				li
 					h3 Font-families
 					dl
@@ -349,6 +370,17 @@ block content
 									code= fontsize.value
 								dd.count #{fontsize.count}&times;
 								dd.specimen(style=`font-size: ${fontsize.value}`) The quick brown fox jumps over the lazy dog
+				li
+					h3 Box-shadows
+					dl
+						for boxshadow in stats['values.boxshadows.unique']
+							.css-value
+								dt.value
+									code= boxshadow.value
+								dd.count #{boxshadow.count}&times;
+								dd.box-shadows
+									code.box-shadow.box-shadow--is-light(style=`box-shadow: ${boxshadow.value}`) #fff
+									code.box-shadow.box-shadow--is-dark(style=`box-shadow: ${boxshadow.value}`) #000
 
 	section
 		h2 CSS
