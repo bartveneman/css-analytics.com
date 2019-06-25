@@ -12,20 +12,20 @@
     "url": "git+https://github.com/bartveneman/css-analytics.com.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Bart Veneman",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bartveneman/css-analytics.com/issues"
   },
   "homepage": "https://github.com/bartveneman/css-analytics.com#readme",
   "dependencies": {
-    "@projectwallace/css-analyzer": "^2.4.0",
+    "@projectwallace/css-analyzer": "^2.5.1",
     "body-parser": "^1.19.0",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "got": "^9.6.0",
     "normalize-url": "^4.3.0",
     "pretty-bytes": "^5.2.0",
-    "pug": "^2.0.3",
+    "pug": "^2.0.4",
     "tinycolor2": "^1.4.1"
   }
 }

@@ -51,6 +51,15 @@ block content
 		.metrics
 			ul.cards
 				li
+					h3 Lines of Code
+					dl
+						.stat
+							dt Source lines of code
+							dd= formatNumber(stats['stylesheets.linesOfCode.sourceLinesOfCode.total'])
+						.stat
+							dt Lines of code
+							dd= formatNumber(stats['stylesheets.linesOfCode.total'])
+				li
 					h3 Rules
 					dl
 						.stat
@@ -166,12 +175,13 @@ block content
 								dt.value.is-selector
 									code= selector.value
 				li
-					h3 Top identifiers selectors
+					h3 Top complexity selectors (complexity score: #{stats['selectors.complexity.max.value']})
 					dl.selectors
-						for selector in stats['selectors.identifiers.top']
+						for selector in stats['selectors.complexity.max.selectors']
 							.selector
 								dt.value.is-selector
 									code= selector.value
+								dd.count #{selector.count}&times;
 				if stats['selectors.id.total'] > 0
 					li
 						h3 ID selectors
@@ -229,6 +239,10 @@ block content
 						.stat
 							dt Raw bytes
 							dd= formatFileSize(stats['stylesheets.size'])
+							dt Compressed (gzip)
+							dd= formatFileSize(stats['stylesheets.filesize.compressed.gzip.totalBytes'])
+							dt Compressed (brotli)
+							dd= formatFileSize(stats['stylesheets.filesize.compressed.brotli.totalBytes'])
 				li
 					h3 Rules
 					dl
