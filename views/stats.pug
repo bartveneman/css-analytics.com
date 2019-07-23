@@ -14,7 +14,7 @@ block content
 		a(href='/') Back to home
 
 	section
-		h2 Summary
+		h2#summary Summary
 		.metrics
 			ul.cards
 				li
@@ -47,7 +47,7 @@ block content
 							dd= formatNumber(stats['declarations.total'])
 
 	section
-		h2 Complexity
+		h2#complexity Complexity
 		.metrics
 			ul.cards
 				li
@@ -228,9 +228,8 @@ block content
 										code= mq.value
 									dd.count #{mq.count}&times;
 
-
 	section
-		h2 Performance
+		h2#performance Performance
 		.metrics
 			ul.cards
 				li
@@ -289,7 +288,7 @@ block content
 									dd.count #{fontface.count}&times;
 
 	section
-		h2 Branding
+		h2#branding Branding
 		.metrics
 			ul.cards
 				li
@@ -329,6 +328,15 @@ block content
 							dt Unique
 							dd= formatNumber(stats['values.boxshadows.totalUnique'])
 				li
+					h3 Text-shadows
+					dl
+						.stat
+							dt Total
+							dd= formatNumber(stats['values.textshadows.total'])
+						.stat
+							dt Unique
+							dd= formatNumber(stats['values.textshadows.totalUnique'])
+				li
 					h3 @keyframes
 					dl
 						.stat
@@ -340,7 +348,7 @@ block content
 
 			ul.sheets
 				li
-					h3 Colors
+					h3#colors Colors
 					- const unique = stats['values.colors.unique']
 					- const colorBarWidth = 1000
 					- const colorBarHeight = 160
@@ -367,7 +375,7 @@ block content
 										path(d="M 0,0 16,0 16,16 z" fill="#ffffff")
 										rect(width=16 height=16 x=0 y=0 fill=formatSvgColor(color.value))
 				li
-					h3 Font-families
+					h3#font-families Font-families
 					dl
 						for ff in stats['values.fontfamilies.unique']
 							.css-value
@@ -376,7 +384,7 @@ block content
 								dd.count #{ff.count}&times;
 								dd.specimen(style=`font-family: ${ff.value}; font-size: 2em;`) The quick brown fox jumps over the lazy dog
 				li
-					h3 Font-sizes
+					h3#fonr-sizes Font-sizes
 					dl
 						for fontsize in stats['values.fontsizes.unique']
 							.css-value
@@ -385,7 +393,7 @@ block content
 								dd.count #{fontsize.count}&times;
 								dd.specimen(style=`font-size: ${fontsize.value}`) The quick brown fox jumps over the lazy dog
 				li
-					h3 Box-shadows
+					h3#box-shadows Box-shadows
 					dl
 						for boxshadow in stats['values.boxshadows.unique']
 							.css-value
@@ -395,9 +403,20 @@ block content
 								dd.box-shadows
 									code.box-shadow.box-shadow--is-light(style=`box-shadow: ${boxshadow.value}`) #fff
 									code.box-shadow.box-shadow--is-dark(style=`box-shadow: ${boxshadow.value}`) #000
+				li
+					h3#text-shadows Text-shadows
+					dl
+						for textshadow in stats['values.textshadows.unique']
+							.css-value
+								dt.value
+									code= textshadow.value
+								dd.count #{textshadow.count}&times;
+								dd.box-shadows
+									code.box-shadow.box-shadow--is-light(style=`text-shadow: ${textshadow.value}`) #fff
+									code.box-shadow.box-shadow--is-dark(style=`text-shadow: ${textshadow.value}`) #000
 
 	section
-		h2 CSS
+		h2#css CSS
 		style
 			| .raw-css { white-space: pre-wrap; overflow-x: hidden; max-height: 300px; -webkit-overflow-scrolling: touch; grid-column: 1/-1;}
 		pre.raw-css(style='grid-column: 1/-1;')= css
