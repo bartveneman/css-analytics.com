@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 
 app.get("*", async (req, res) => {
   const url = req.query.url
-    ? normalizeUrl(req.query.url, { stripWWW: false })
+    ? normalizeUrl(req.query.url, { stripWWW: false, stripProtocol: true })
     : undefined;
 
   if (url) {

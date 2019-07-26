@@ -13,6 +13,9 @@ block content
 	p(style='text-align: center')
 		a(href='/') Back to home
 
+	if url
+		p(style='text-align: center; margin-top: 4rem; margin-bottom: 4rem; padding: 0 1rem; font-size: 2em')= url
+
 	section
 		h2#summary Summary
 		.metrics
